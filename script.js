@@ -8,6 +8,7 @@ let transactions = [];
 function getInputValues() {
   detail = document.getElementById("detail").value;
   amount = Number(document.getElementById("amount").value);
+
 }
 
 // validate inputs
@@ -46,6 +47,8 @@ function getResults () {
     let expense = 0;
     let amount = 0;
 
+    
+
    for (let i = 0; i < transactions.length; i++) {
 
     if (transactions[i].type === "Income") {
@@ -63,18 +66,71 @@ function getResults () {
    amountTotal.innerHTML = income - expense;
 }
 
-
 function calc(type) {
   getInputValues();
 
   if (!isValid()) return;
 
-  transactions.push({ type, detail, amount })
+
+  // TODO add array to local storage
+  
+  transactions.push({ type, detail, amount });
+
+  // console.log(transactions);
+
   getResults();
   displayTable();
+  clearInput();
+  store();
+  getLocalStorage();
+}
+
+const clearInput = () => {
+  document.getElementById("detail").value = "";
+  document.getElementById("amount").value = "";
+}
+
+const reset = () => {
+  document.getElementById("detail").value = "";
+  document.getElementById("amount").value = "";
+  document.getElementById("tableBody").innerHTML = "";
+
+  localStorage.clear();
+
+  transactions = [];
+
+  document.getElementById("incomeTotal").innerHTML = "R0";
+  document.getElementById("expenseTotal").innerHTML = "R0";
+  document.getElementById("amountTotal").innerHTML = "R0";
+
+}
+
+function store () {
+  localStorage.setItem("transactions", JSON.stringify(transactions));
+  /* localStorage.setItem("detail", detail);
+  localStorage.setItem("amount", amount); */
+}
+
+const getLocalStorage = () => {
+  if(localStorage.getItem("transactions") === null);
+    localStorage.getItem("transactions", JSON.stringify([]));
+
+  let localData = JSON.parse(localStorage.getItem("transactions"));
+
+  // returns array of localStorage data
+  return localData;
 }
 
 
+window.addEventListener("load", () =>{
 
+   if(transactions.length === 0) {
+     transactions.push(...getLocalStorage());
+   }
+
+  getResults();
+  displayTable();
+    
+});
 
 
