@@ -8,6 +8,7 @@ let transactions = [];
 function getInputValues() {
   detail = document.getElementById("detail").value;
   amount = Number(document.getElementById("amount").value);
+
 }
 
 // validate inputs
@@ -63,18 +64,44 @@ function getResults () {
    amountTotal.innerHTML = income - expense;
 }
 
-
 function calc(type) {
   getInputValues();
 
   if (!isValid()) return;
 
-  transactions.push({ type, detail, amount })
+  localStorage.setItem("type", type);
+  localStorage.setItem("detail", detail);
+  localStorage.setItem("amount", amount);
+
+
+  // TODO add array to local storage
+  
+  transactions.push({ type, detail, amount });
   getResults();
   displayTable();
+  clearInput();
 }
 
+const clearInput = () => {
+  document.getElementById("detail").value = "";
+  document.getElementById("amount").value = 0;
+}
 
+const reset = () => {
+  document.getElementById("detail").value = "";
+  document.getElementById("amount").value = 0;
+  document.getElementById("tableBody").innerHTML = "";
 
+  localStorage.setItem("type", "");
+  localStorage.setItem("detail", "");
+  localStorage.setItem("amount", 0);
+
+  transactions = [];
+
+  document.getElementById("incomeTotal").innerHTML = "R0";
+  document.getElementById("expenseTotal").innerHTML = "R0";
+  document.getElementById("amountTotal").innerHTML = "R0";
+
+}
 
 
